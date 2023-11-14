@@ -1,6 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const cors = require("cors");
 const User = require("./models/User"); // Assuming you have a User model
 
 const mongoose = require("mongoose");
@@ -14,6 +15,7 @@ db.once("open", function () {
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 const JWT_SECRET = "your_jwt_secret"; // Store this securely
 
@@ -23,13 +25,13 @@ app.post("/login", async (req, res) => {
   // Find the user by username
   const user = await User.findOne({ username });
   if (!user) {
-    return res.status(400).send("Invalid username");
+    return res.status(400).json({ message: "Invalid username" });
   }
 
   // Check if the password is correct
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    return res.status(400).send("Invalid credentials");
+    return res.status(400).json({ message: "Invalid credentials" });
   }
 
   // Create a token
@@ -48,11 +50,8 @@ app.post("/register", async (req, res) => {
       return res.status(400).send("Username already exists");
     }
 
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     // Create a new user and save to the database
-    const user = new User({ username, password: hashedPassword });
+    const user = new User({ username, password });
     await user.save();
 
     res.status(201).send("User created successfully");
