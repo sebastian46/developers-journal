@@ -59,3 +59,7 @@ Developers Journal is a web application designed for developers to track their d
    ```
    npm start
    ```
+
+### Notes
+
+Used MongoDB for database, bcrypt for encryption, and Postman for testing backend endpoints
