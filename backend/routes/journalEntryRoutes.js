@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const JournalEntry = require("./models/journalEntry");
-const verifyToken = require("./middleware/authMiddleware"); // Assuming you have this middleware
+const JournalEntry = require("../models/journalEntry");
+const verifyToken = require("../middleware/authMiddleware"); // Assuming you have this middleware
 
 // POST endpoint to create a new journal entry
 router.post("/", verifyToken, async (req, res) => {
