@@ -1,13 +1,41 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 function Dashboard() {
-  // Placeholder data - this will be replaced with real data from the backend
-  const recentEntries = [
-    { id: 1, date: "2023-11-10", title: "Fixed bug in login module" },
-    { id: 2, date: "2023-11-09", title: "Completed UI for report generator" },
-    // Add more placeholder entries here
-  ];
+  const [entries, setEntries] = useState([]); // State to hold the journal entries
+  const [loading, setLoading] = useState(true); // State to indicate loading status
+  const [error, setError] = useState(""); // State to hold any error message
+
+  useEffect(() => {
+    const fetchEntries = async () => {
+      const token = localStorage.getItem("token"); // Retrieve the JWT token from storage
+
+      try {
+        const response = await fetch("http://localhost:3001/api/journal", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setEntries(data); // Store the journal entries in state
+        } else {
+          // Handle errors from the server
+          setError(data.message || "Failed to fetch entries.");
+        }
+      } catch (error) {
+        // Handle network errors
+        setError("Failed to fetch entries. Please try again later.");
+      } finally {
+        setLoading(false); // Set loading to false after the request is completed
+      }
+    };
+
+    fetchEntries();
+  }, []);
 
   return (
     <div>
@@ -22,8 +50,8 @@ function Dashboard() {
       <div>
         <h2>Recent Entries</h2>
         <ul>
-          {recentEntries.map((entry) => (
-            <li key={entry.id}>
+          {entries.map((entry) => (
+            <li key={entry._id}>
               {entry.date}: {entry.title}
             </li>
           ))}

@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const User = require("./models/User"); // Assuming you have a User model
+const journalEntryRoutes = require("./journalEntryRoutes");
 
 const mongoose = require("mongoose");
 mongoose.connect("mongodb://127.0.0.1:27017/developer-journal");
@@ -16,6 +17,7 @@ db.once("open", function () {
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use("/api/journal", journalEntryRoutes);
 
 const JWT_SECRET = "your_jwt_secret"; // Store this securely
 
@@ -35,8 +37,8 @@ app.post("/login", async (req, res) => {
   }
 
   // Create a token
+  // const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: "1h" });
   const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: "1h" });
-
   res.send({ token });
 });
 
