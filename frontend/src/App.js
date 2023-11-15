@@ -9,6 +9,8 @@ import { AuthProvider } from "./AuthProvider";
 import PrivateRoute from "./PrivateRoute";
 import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
 import Container from "@mui/material/Container";
+import Profile from "./components/Profile";
+
 // Create a theme instance.
 const theme = createTheme({
   // Customize your theme here
@@ -24,6 +26,14 @@ function App() {
             <Routes>
               <Route path="/" element={<LoginPage />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route
+                path="/profile"
+                element={
+                  <PrivateRoute>
+                    <Profile />
+                  </PrivateRoute>
+                }
+              ></Route>
               <Route
                 path="/dashboard"
                 element={

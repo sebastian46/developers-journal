@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import {
   AppBar,
@@ -22,7 +22,40 @@ function NavBar() {
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(false); // State to control Drawer open/close
-  const userIcon = null; // Replace with user's icon if you have one
+  const [userIcon, setUserIcon] = useState(null); // State for user icon URL
+
+  // Fetch user profile data
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:3001/api/users/profile",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          const avatarUrl = data.avatarUrl
+            ? `http://localhost:3001/${data.avatarUrl.replace(/\\/g, "/")}`
+            : null;
+          setUserIcon(avatarUrl); // Set user icon URL if available
+        } else {
+          // Handle any errors
+          console.error("Failed to fetch user profile.");
+        }
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    if (isAuthenticated) {
+      fetchUserProfile();
+    }
+  }, [isAuthenticated]);
 
   // Toggle drawer open/close
   const toggleDrawer = (open) => (event) => {
@@ -92,10 +125,11 @@ function NavBar() {
                 onClick={() => navigate("/profile")}
                 sx={{ p: 0 }}
               >
-                <Avatar src={userIcon} alt="User">
-                  {!userIcon && "U"}{" "}
-                  {/* Default text if no icon is available */}
-                </Avatar>
+                {userIcon ? (
+                  <Avatar src={userIcon} alt="User" />
+                ) : (
+                  <Avatar>{"U"}</Avatar> // Default text or placeholder if no icon
+                )}
               </IconButton>
               <Button color="inherit" onClick={handleLogout}>
                 Logout
