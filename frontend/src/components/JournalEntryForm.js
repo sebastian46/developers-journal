@@ -1,4 +1,12 @@
 import React, { useState } from "react";
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  CssBaseline,
+} from "@mui/material";
 
 function JournalEntryForm() {
   const [entry, setEntry] = useState({
@@ -46,43 +54,73 @@ function JournalEntryForm() {
   };
 
   return (
-    <div>
-      <h1>Add Journal Entry</h1>
-      {error && <p className="error">{error}</p>}{" "}
-      {/* Display any error message */}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Date:</label>
-          <input
-            type="date"
+    <Container component="main" maxWidth="sm">
+      <CssBaseline />
+      <Box
+        sx={{
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          Add Journal Entry
+        </Typography>
+        {error && (
+          <Typography color="error" align="center">
+            {error}
+          </Typography>
+        )}
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="date"
+            label="Date"
             name="date"
+            type="date"
+            InputLabelProps={{ shrink: true }}
             value={entry.date}
             onChange={handleChange}
-            required
+            sx={{ mb: 3 }}
           />
-        </div>
-        <div>
-          <label>Title:</label>
-          <input
-            type="text"
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="title"
+            label="Title"
             name="title"
+            autoComplete="title"
+            autoFocus
             value={entry.title}
             onChange={handleChange}
-            required
           />
-        </div>
-        <div>
-          <label>Details:</label>
-          <textarea
+          <TextField
+            margin="normal"
+            required
+            fullWidth
             name="details"
+            label="Details"
+            id="details"
+            multiline
+            rows={4}
             value={entry.details}
             onChange={handleChange}
-            required
           />
-        </div>
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Submit
+          </Button>
+        </Box>
+      </Box>
+    </Container>
   );
 }
 

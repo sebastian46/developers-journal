@@ -1,5 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+import {
+  Container,
+  Typography,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  CircularProgress,
+  Box,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Card,
+  CardContent,
+  CardActions,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 function Dashboard() {
   const [entries, setEntries] = useState([]); // State to hold the journal entries
@@ -38,27 +55,65 @@ function Dashboard() {
   }, []);
 
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <p>Welcome to your journal dashboard!</p>
-      <div>
-        <Link to="/journal-entry">Add New Journal Entry</Link>
-      </div>
-      <div>
-        <Link to="/report-generator">Generate Report</Link>
-      </div>
-      <div>
-        <h2>Recent Entries</h2>
-        <ul>
-          {entries.map((entry) => (
-            <li key={entry._id}>
-              {entry.date}: {entry.title}
-            </li>
-          ))}
-        </ul>
-      </div>
-      {/* Additional dashboard features can be added here */}
-    </div>
+    <Container>
+      <Typography variant="h2" component="h1" gutterBottom>
+        Dashboard
+      </Typography>
+      <Typography paragraph>Welcome to the Dashboard</Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 4 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          component={RouterLink}
+          to="/journal-entry"
+        >
+          Add New Journal Entry
+        </Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          component={RouterLink}
+          to="/report-generator"
+        >
+          Generate Report
+        </Button>
+      </Box>
+      <Card>
+        <CardContent>
+          <Typography variant="h5" component="h2">
+            Recent Entries
+          </Typography>
+          {loading ? (
+            <CircularProgress />
+          ) : error ? (
+            <Typography color="error">{error}</Typography>
+          ) : (
+            <List>
+              {entries.map((entry) => (
+                <Accordion key={entry._id}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <ListItemText
+                      primary={new Date(entry.date).toLocaleDateString()}
+                      secondary={entry.title}
+                    />
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Typography variant="body2">{entry.details}</Typography>
+                  </AccordionDetails>
+                </Accordion>
+              ))}
+            </List>
+          )}
+        </CardContent>
+        <CardActions>
+          {/* Add actions for the card like 'View All' if needed */}
+        </CardActions>
+      </Card>
+    </Container>
   );
 }
 

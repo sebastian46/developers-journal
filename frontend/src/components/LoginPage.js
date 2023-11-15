@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthProvider";
+import {
+  Container,
+  Box,
+  TextField,
+  Button,
+  Typography,
+  CssBaseline,
+} from "@mui/material";
 
 function LoginPage() {
   // If you are using React Router, history is passed down to route components
@@ -49,31 +57,60 @@ function LoginPage() {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      {errorMessage && <p className="error">{errorMessage}</p>}
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Username:</label>
-          <input
-            type="text"
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <Box
+        sx={{
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          Login
+        </Typography>
+        {errorMessage && (
+          <Typography color="error" align="center">
+            {errorMessage}
+          </Typography>
+        )}
+        <Box component="form" onSubmit={handleLogin} noValidate sx={{ mt: 1 }}>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            label="Username"
+            name="username"
+            autoComplete="username"
+            autoFocus
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            required
           />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
             type="password"
+            autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
           />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-    </div>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Login
+          </Button>
+        </Box>
+      </Box>
+    </Container>
   );
 }
 
