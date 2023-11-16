@@ -17,23 +17,31 @@ import {
   CardActions,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import JournalFilter from "./JournalFilter";
+import JournalEntryList from "./JournalEntryList";
+import ReportGenerator from "./ReportGenerator";
 
 function Dashboard() {
   const [entries, setEntries] = useState([]); // State to hold the journal entries
   const [loading, setLoading] = useState(true); // State to indicate loading status
   const [error, setError] = useState(""); // State to hold any error message
+  const [filters, setFilters] = useState({});
 
   useEffect(() => {
     const fetchEntries = async () => {
       const token = localStorage.getItem("token"); // Retrieve the JWT token from storage
+      const queryParams = new URLSearchParams(filters).toString();
 
       try {
-        const response = await fetch("http://localhost:3001/api/journal", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
-          },
-        });
+        const response = await fetch(
+          `http://localhost:3001/api/journal?${queryParams}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            },
+          }
+        );
 
         const data = await response.json();
 
@@ -52,7 +60,16 @@ function Dashboard() {
     };
 
     fetchEntries();
-  }, []);
+  }, [filters]); // Add filters to dependency array to refetch when they change
+
+  const handleApplyFilter = (newFilters) => {
+    // console.log(newFilters);
+    setFilters(newFilters); // Update the filters state which will trigger a re-fetch
+  };
+
+  const handleGenerateReport = () => {
+    // Logic to generate report based on the current entries and filters
+  };
 
   return (
     <Container>
@@ -78,6 +95,7 @@ function Dashboard() {
           Generate Report
         </Button>
       </Box>
+      <JournalFilter onApplyFilter={handleApplyFilter} />
       <Card>
         <CardContent>
           <Typography variant="h5" component="h2">
@@ -88,25 +106,7 @@ function Dashboard() {
           ) : error ? (
             <Typography color="error">{error}</Typography>
           ) : (
-            <List>
-              {entries.map((entry) => (
-                <Accordion key={entry._id}>
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <ListItemText
-                      primary={new Date(entry.date).toLocaleDateString()}
-                      secondary={entry.title}
-                    />
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Typography variant="body2">{entry.details}</Typography>
-                  </AccordionDetails>
-                </Accordion>
-              ))}
-            </List>
+            <JournalEntryList entries={entries} />
           )}
         </CardContent>
         <CardActions>

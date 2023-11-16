@@ -1,17 +1,13 @@
 import React from "react";
+import { Button } from "@mui/material";
 
-function ReportGenerator() {
-  const handleGenerateReport = () => {
-    // Placeholder for future report generation logic
-    console.log("Report generation will be implemented here.");
-  };
-
+const ReportGenerator = ({ onGenerateReport }) => {
   return (
     <div>
-      <h1>Generate Report</h1>
-      <button onClick={handleGenerateReport}>Generate Report</button>
+      <Button onClick={onGenerateReport}>Generate Report</Button>
+      {/* Add more functionality for selecting report format and downloading */}
     </div>
   );
-}
+};
 
 export default ReportGenerator;
