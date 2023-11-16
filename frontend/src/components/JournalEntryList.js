@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   List,
   Accordion,
@@ -9,15 +9,37 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-const JournalEntryList = ({ entries }) => {
+const JournalEntryList = ({ entries, isExpanded }) => {
+  // State to track the expansion state of each accordion
+  const [expandedStates, setExpandedStates] = useState({});
+
+  useEffect(() => {
+    // Update all expanded states when isExpanded changes
+    const newExpandedStates = {};
+    entries.forEach((entry) => {
+      newExpandedStates[entry._id] = isExpanded;
+    });
+    setExpandedStates(newExpandedStates);
+  }, [isExpanded, entries]);
+
+  const handleAccordionChange = (entryId) => (event, newExpanded) => {
+    setExpandedStates((prevExpandedStates) => ({
+      ...prevExpandedStates,
+      [entryId]: newExpanded,
+    }));
+  };
   return (
     <List>
       {entries.map((entry) => (
-        <Accordion key={entry._id}>
+        <Accordion
+          key={entry._id}
+          expanded={expandedStates[entry._id] || false}
+          onChange={handleAccordionChange(entry._id)}
+        >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
+            aria-controls={`panel${entry._id}-content`}
+            id={`panel${entry._id}-header`}
           >
             <ListItemText
               primary={new Date(entry.date).toLocaleDateString("en-US", {

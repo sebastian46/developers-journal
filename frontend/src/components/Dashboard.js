@@ -20,12 +20,14 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import JournalFilter from "./JournalFilter";
 import JournalEntryList from "./JournalEntryList";
 import ReportGenerator from "./ReportGenerator";
+import ExpandCollapseButton from "./ExpandCollapseButton";
 
 function Dashboard() {
   const [entries, setEntries] = useState([]); // State to hold the journal entries
   const [loading, setLoading] = useState(true); // State to indicate loading status
   const [error, setError] = useState(""); // State to hold any error message
   const [filters, setFilters] = useState({});
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     const fetchEntries = async () => {
@@ -71,6 +73,11 @@ function Dashboard() {
     // Logic to generate report based on the current entries and filters
   };
 
+  const handleExpandToggle = () => {
+    // console.log(!isExpanded);
+    setIsExpanded(!isExpanded);
+  };
+
   return (
     <Container>
       <Typography variant="h2" component="h1" gutterBottom>
@@ -87,7 +94,7 @@ function Dashboard() {
           Add New Journal Entry
         </Button>
         <Button
-          variant="outlined"
+          variant="contained"
           color="secondary"
           component={RouterLink}
           to="/report-generator"
@@ -101,12 +108,16 @@ function Dashboard() {
           <Typography variant="h5" component="h2">
             Recent Entries
           </Typography>
+          <ExpandCollapseButton
+            expanded={isExpanded}
+            onToggle={handleExpandToggle}
+          />
           {loading ? (
             <CircularProgress />
           ) : error ? (
             <Typography color="error">{error}</Typography>
           ) : (
-            <JournalEntryList entries={entries} />
+            <JournalEntryList entries={entries} isExpanded={isExpanded} />
           )}
         </CardContent>
         <CardActions>
