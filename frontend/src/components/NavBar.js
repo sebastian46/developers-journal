@@ -18,7 +18,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard"; // Import Dashboard i
 import AddBoxIcon from "@mui/icons-material/AddBox"; // Import AddBox icon for adding journal entry
 import { useAuth } from "../AuthProvider";
 
-function NavBar() {
+function NavBar({ toggleThemeMode }) {
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(false); // State to control Drawer open/close
@@ -133,6 +133,9 @@ function NavBar() {
               </IconButton>
               <Button color="inherit" onClick={handleLogout}>
                 Logout
+              </Button>
+              <Button color="inherit" onClick={toggleThemeMode}>
+                Toggle Night Mode
               </Button>
             </>
           ) : (

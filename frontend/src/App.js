@@ -10,18 +10,20 @@ import PrivateRoute from "./PrivateRoute";
 import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
 import Container from "@mui/material/Container";
 import Profile from "./components/Profile";
-
+import { useThemeMode } from "./components/useThemeMode";
 // Create a theme instance.
 const theme = createTheme({
   // Customize your theme here
 });
 
 function App() {
+  const { theme, toggleThemeMode } = useThemeMode();
+
   return (
     <ThemeProvider theme={theme}>
       <AuthProvider>
         <Router>
-          <NavBar />
+          <NavBar toggleThemeMode={toggleThemeMode} />
           <Container>
             <Routes>
               <Route path="/" element={<LoginPage />} />
