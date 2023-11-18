@@ -15,6 +15,7 @@ import {
   Card,
   CardContent,
   CardActions,
+  CssBaseline,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import JournalFilter from "./JournalFilter";
@@ -80,6 +81,7 @@ function Dashboard() {
 
   return (
     <Container>
+      <CssBaseline />
       <Typography variant="h2" component="h1" gutterBottom>
         Dashboard
       </Typography>

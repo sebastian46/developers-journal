@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import ReactQuill from "react-quill"; // Import ReactQuill
+import "react-quill/dist/quill.snow.css"; // Import quill styles
 import {
   Container,
   TextField,
@@ -20,6 +22,13 @@ function JournalEntryForm() {
     setEntry({
       ...entry,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleDetailsChange = (value) => {
+    setEntry({
+      ...entry,
+      details: value,
     });
   };
 
@@ -54,7 +63,7 @@ function JournalEntryForm() {
   };
 
   return (
-    <Container component="main" maxWidth="sm">
+    <Container component="main" maxWidth="md">
       <CssBaseline />
       <Box
         sx={{
@@ -72,7 +81,16 @@ function JournalEntryForm() {
             {error}
           </Typography>
         )}
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          noValidate
+          sx={{
+            mt: 1,
+            width: "100%",
+            maxWidth: { sm: "480px", md: "720px", lg: "1280px" },
+          }}
+        >
           <TextField
             margin="normal"
             required
@@ -97,18 +115,13 @@ function JournalEntryForm() {
             autoFocus
             value={entry.title}
             onChange={handleChange}
+            sx={{ mb: 3 }}
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="details"
-            label="Details"
-            id="details"
-            multiline
-            rows={4}
+          <ReactQuill
+            theme="snow"
             value={entry.details}
-            onChange={handleChange}
+            onChange={handleDetailsChange}
+            style={{ height: "300px", marginBottom: "50px" }}
           />
           <Button
             type="submit"

@@ -8,10 +8,13 @@ import {
   ListItemText,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import DOMPurify from "dompurify";
 
 const JournalEntryList = ({ entries, isExpanded }) => {
   // State to track the expansion state of each accordion
+  // const sanitizedDetails = DOMPurify.sanitize(entry.details);
   const [expandedStates, setExpandedStates] = useState({});
+  const [cleanEntry, setCleanEntry] = useState();
 
   useEffect(() => {
     // Update all expanded states when isExpanded changes
@@ -28,6 +31,11 @@ const JournalEntryList = ({ entries, isExpanded }) => {
       [entryId]: newExpanded,
     }));
   };
+
+  const SanitizeHTML = ({ entry }) => (
+    <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(entry) }} />
+  );
+
   return (
     <List>
       {entries.map((entry) => (
@@ -49,7 +57,8 @@ const JournalEntryList = ({ entries, isExpanded }) => {
             />
           </AccordionSummary>
           <AccordionDetails>
-            <Typography variant="body2">{entry.details}</Typography>
+            <SanitizeHTML entry={entry.details} />
+            {/* <Typography variant="body2">{entry.details}</Typography> */}
           </AccordionDetails>
         </Accordion>
       ))}
