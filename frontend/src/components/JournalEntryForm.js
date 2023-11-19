@@ -39,7 +39,7 @@ function JournalEntryForm() {
 
         if (response.ok) {
           const tagsData = await response.json();
-          console.log(tagsData);
+          // console.log(tagsData);
           // Assuming the response is an array of tags
           setAvailableTags(tagsData.map((tag) => tag.tagName));
         } else {

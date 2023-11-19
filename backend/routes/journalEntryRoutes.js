@@ -37,7 +37,7 @@ router.post("/", verifyToken, async (req, res) => {
 
 // GET endpoint to retrieve journal entries for a user
 router.get("/", verifyToken, async (req, res) => {
-  const { startDate, endDate, searchQuery } = req.query;
+  const { startDate, endDate, searchQuery, tags } = req.query;
   // console.log(req.query);
   try {
     // console.log(req.query, startDate, endDate);
@@ -60,6 +60,14 @@ router.get("/", verifyToken, async (req, res) => {
         { title: { $regex: searchQuery, $options: "i" } }, // Case-insensitive search in title
         { details: { $regex: searchQuery, $options: "i" } }, // Case-insensitive search in details
       ];
+    }
+
+    // Apply tag filter if it exists
+    if (tags) {
+      const tagIds = tags
+        .split(",")
+        .map((tagId) => mongoose.Types.ObjectId(tagId));
+      query.tags = { $in: tagIds };
     }
 
     // Find entries for the logged-in user within the optional date range

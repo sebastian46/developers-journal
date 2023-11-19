@@ -25,7 +25,7 @@ const JournalEntryList = ({ entries, isExpanded }) => {
       newExpandedStates[entry._id] = isExpanded;
     });
     setExpandedStates(newExpandedStates);
-    console.log(entries);
+    // console.log(entries);
   }, [isExpanded, entries]);
 
   const handleAccordionChange = (entryId) => (event, newExpanded) => {
