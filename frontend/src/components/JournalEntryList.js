@@ -70,7 +70,7 @@ const JournalEntryList = ({ entries, isExpanded }) => {
               />
               <Stack direction="row" spacing={1} mt={2}>
                 {entry.tags.map((tag) => (
-                  <Chip key={tag} label={tag} />
+                  <Chip key={tag._id} label={tag.tagName} />
                 ))}
               </Stack>
             </div>

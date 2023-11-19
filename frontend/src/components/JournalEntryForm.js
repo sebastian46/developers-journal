@@ -163,8 +163,8 @@ function JournalEntryForm() {
               renderValue={(selected) => selected.join(", ")}
               // MenuProps={MenuProps} // Optional, for customizing the dropdown menu
             >
-              {availableTags.map((tag) => (
-                <MenuItem key={tag} value={tag}>
+              {availableTags.map((tag, i) => (
+                <MenuItem key={i} value={tag}>
                   {tag}
                 </MenuItem>
               ))}

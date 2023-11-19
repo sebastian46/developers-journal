@@ -63,7 +63,9 @@ router.get("/", verifyToken, async (req, res) => {
     }
 
     // Find entries for the logged-in user within the optional date range
-    const entries = await JournalEntry.find(query).sort({ date: -1 }); // Sort by date, newest first
+    const entries = await JournalEntry.find(query)
+      .populate("tags", "tagName")
+      .sort({ date: -1 }); // Sort by date, newest first
     res.json(entries);
   } catch (error) {
     res.status(500).json({
