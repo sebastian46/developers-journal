@@ -1,29 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const JournalEntry = require("../models/journalEntry");
-const Tag = require("../models/Tags");
+const Tags = require("../models/Tags");
 const verifyToken = require("../middleware/authMiddleware"); // Assuming you have this middleware
 
-// POST endpoint to create a new journal entry
+// POST endpoint to create a new tag entry
 router.post("/", verifyToken, async (req, res) => {
   try {
-    // console.log(req.body);
-    const { date, title, details, tags } = req.body;
+    const { tagName, details } = req.body;
     const userId = req.user._id; // Assuming verifyToken middleware adds user to req
-    // Find the tags by name and select only the '_id' field
-    const tagEntities = await Tag.find({ tagName: { $in: tags } }).select(
-      "_id"
-    );
+    const date = new Date();
 
-    // Map the returned tag documents to an array of their IDs
-    const tagIds = tagEntities.map((tag) => tag._id);
-
-    const newEntry = new JournalEntry({
+    const newEntry = new Tags({
       userId,
       date,
-      title,
+      tagName,
       details,
-      tags: tagIds, // Ensure this matches your JournalEntry schema field for tags
     });
 
     const savedEntry = await newEntry.save();
@@ -31,7 +22,7 @@ router.post("/", verifyToken, async (req, res) => {
   } catch (error) {
     res
       .status(400)
-      .json({ message: "Error saving journal entry", error: error.message });
+      .json({ message: "Error saving tag entry", error: error.message });
   }
 });
 
@@ -63,7 +54,7 @@ router.get("/", verifyToken, async (req, res) => {
     }
 
     // Find entries for the logged-in user within the optional date range
-    const entries = await JournalEntry.find(query).sort({ date: -1 }); // Sort by date, newest first
+    const entries = await Tags.find(query).sort({ date: -1 }); // Sort by date, newest first
     res.json(entries);
   } catch (error) {
     res.status(500).json({

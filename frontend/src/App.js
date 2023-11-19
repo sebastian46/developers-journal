@@ -11,6 +11,7 @@ import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
 import Container from "@mui/material/Container";
 import Profile from "./components/Profile";
 import { useThemeMode } from "./components/useThemeMode";
+import TagForm from "./components/Forms/TagForm";
 // Create a theme instance.
 const theme = createTheme({
   // Customize your theme here
@@ -57,6 +58,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <ReportGenerator />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/create/tag"
+                element={
+                  <PrivateRoute>
+                    <TagForm />
                   </PrivateRoute>
                 }
               />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ReactQuill from "react-quill"; // Import ReactQuill
 import "react-quill/dist/quill.snow.css"; // Import quill styles
 import {
@@ -8,54 +8,13 @@ import {
   Typography,
   Box,
   CssBaseline,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
 } from "@mui/material";
-
-function JournalEntryForm() {
+function TagForm() {
   const [entry, setEntry] = useState({
-    date: "",
-    title: "",
+    tagName: "",
     details: "",
-    tags: [],
   });
   const [error, setError] = useState(""); // For error messages
-  const [availableTags, setAvailableTags] = useState([]);
-  const [selectedTags, setSelectedTags] = useState([]);
-
-  useEffect(() => {
-    const fetchTags = async () => {
-      const token = localStorage.getItem("token"); // Retrieve the JWT token from storage
-
-      try {
-        const response = await fetch("http://localhost:3001/api/tags", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
-          },
-        });
-
-        if (response.ok) {
-          const tagsData = await response.json();
-          console.log(tagsData);
-          // Assuming the response is an array of tags
-          setAvailableTags(tagsData.map((tag) => tag.tagName));
-        } else {
-          // Handle errors from the server
-          console.error("Failed to fetch tags.");
-        }
-      } catch (error) {
-        // Handle network errors
-        console.error("Failed to fetch tags. Please try again later.");
-      }
-    };
-    // console.log(availableTags);
-
-    fetchTags();
-    // console.log(availableTags);
-  }, []);
 
   const handleChange = (e) => {
     setEntry({
@@ -71,35 +30,26 @@ function JournalEntryForm() {
     });
   };
 
-  const handleTagChange = (event) => {
-    setSelectedTags(event.target.value);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(""); // Reset any previous error
     const token = localStorage.getItem("token"); // Retrieve the JWT token from storage
-    const journalEntryData = {
-      ...entry,
-      tags: selectedTags,
-    };
-    console.log(journalEntryData);
 
     try {
-      const response = await fetch("http://localhost:3001/api/journal", {
+      const response = await fetch("http://localhost:3001/api/tags", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, // Include the token in the Authorization header
         },
-        body: JSON.stringify(journalEntryData),
+        body: JSON.stringify(entry),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // console.log("Journal Entry Submitted:", data);
-        setEntry({ date: "", title: "", details: "" }); // Reset the form after successful submission
+        // console.log("Tag Submitted:", data);
+        setEntry({ tagName: "", details: "" }); // Reset the form after successful submission
       } else {
         // Handle errors from the server
         setError(data.message || "An error occurred while saving the entry.");
@@ -109,7 +59,6 @@ function JournalEntryForm() {
       setError("Failed to submit entry. Please try again later.");
     }
   };
-
   return (
     <Container component="main" maxWidth="md">
       <CssBaseline />
@@ -122,7 +71,7 @@ function JournalEntryForm() {
         }}
       >
         <Typography component="h1" variant="h5">
-          Add Journal Entry
+          Create a Tag
         </Typography>
         {error && (
           <Typography color="error" align="center">
@@ -139,7 +88,7 @@ function JournalEntryForm() {
             maxWidth: { sm: "480px", md: "720px", lg: "1280px" },
           }}
         >
-          <TextField
+          {/* <TextField
             margin="normal"
             required
             fullWidth
@@ -151,44 +100,40 @@ function JournalEntryForm() {
             value={entry.date}
             onChange={handleChange}
             sx={{ mb: 3 }}
-          />
-          <FormControl fullWidth>
-            <InputLabel id="tags-label">Tags</InputLabel>
-            <Select
-              labelId="tags-label"
-              id="tags"
-              multiple
-              value={selectedTags}
-              onChange={handleTagChange}
-              renderValue={(selected) => selected.join(", ")}
-              // MenuProps={MenuProps} // Optional, for customizing the dropdown menu
-            >
-              {availableTags.map((tag) => (
-                <MenuItem key={tag} value={tag}>
-                  {tag}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          /> */}
           <TextField
             margin="normal"
             required
             fullWidth
-            id="title"
-            label="Title"
-            name="title"
-            autoComplete="title"
+            id="tagName"
+            label="Tag"
+            name="tagName"
+            autoComplete="tagName"
             autoFocus
-            value={entry.title}
+            value={entry.tagName}
             onChange={handleChange}
             sx={{ mb: 3 }}
           />
-          <ReactQuill
+
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="details"
+            label="Details"
+            name="details"
+            type="details"
+            InputLabelProps={{ shrink: true }}
+            value={entry.details}
+            onChange={handleChange}
+            sx={{ mb: 3 }}
+          />
+          {/* <ReactQuill
             theme="snow"
             value={entry.details}
             onChange={handleDetailsChange}
             style={{ height: "300px", marginBottom: "50px" }}
-          />
+          /> */}
           <Button
             type="submit"
             fullWidth
@@ -203,4 +148,4 @@ function JournalEntryForm() {
   );
 }
 
-export default JournalEntryForm;
+export default TagForm;

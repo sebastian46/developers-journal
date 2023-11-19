@@ -18,6 +18,12 @@ const journalEntrySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  tags: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Tag",
+    },
+  ],
 });
 
 const JournalEntry = mongoose.model("JournalEntry", journalEntrySchema);

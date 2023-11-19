@@ -8,6 +8,7 @@ const { body, validationResult } = require("express-validator");
 const User = require("./models/User"); // Assuming you have a User model
 const journalEntryRoutes = require("./routes/journalEntryRoutes");
 const userRoutes = require("./routes/userRoutes");
+const tagRoutes = require("./routes/tagRoutes");
 
 const mongoose = require("mongoose");
 mongoose.connect("mongodb://127.0.0.1:27017/developer-journal");
@@ -24,6 +25,7 @@ app.use(cors());
 app.use("/uploads", express.static("uploads"));
 app.use("/api/journal", journalEntryRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/tags", tagRoutes);
 
 const JWT_SECRET = process.env.JWT_SECRET; // Store this securely
 

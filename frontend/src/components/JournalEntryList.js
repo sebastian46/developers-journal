@@ -6,6 +6,8 @@ import {
   AccordionDetails,
   Typography,
   ListItemText,
+  Chip,
+  Stack,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DOMPurify from "dompurify";
@@ -23,6 +25,7 @@ const JournalEntryList = ({ entries, isExpanded }) => {
       newExpandedStates[entry._id] = isExpanded;
     });
     setExpandedStates(newExpandedStates);
+    console.log(entries);
   }, [isExpanded, entries]);
 
   const handleAccordionChange = (entryId) => (event, newExpanded) => {
@@ -57,8 +60,20 @@ const JournalEntryList = ({ entries, isExpanded }) => {
             />
           </AccordionSummary>
           <AccordionDetails>
-            <SanitizeHTML entry={entry.details} />
-            {/* <Typography variant="body2">{entry.details}</Typography> */}
+            <div>
+              <Typography
+                variant="body2"
+                component="div"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(entry.details),
+                }}
+              />
+              <Stack direction="row" spacing={1} mt={2}>
+                {entry.tags.map((tag) => (
+                  <Chip key={tag} label={tag} />
+                ))}
+              </Stack>
+            </div>
           </AccordionDetails>
         </Accordion>
       ))}

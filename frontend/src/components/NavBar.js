@@ -16,6 +16,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu"; // Import Menu icon
 import DashboardIcon from "@mui/icons-material/Dashboard"; // Import Dashboard icon
 import AddBoxIcon from "@mui/icons-material/AddBox"; // Import AddBox icon for adding journal entry
+import LabelIcon from "@mui/icons-material/Label"; // Tag Icon
 import { useAuth } from "../AuthProvider";
 
 function NavBar({ toggleThemeMode }) {
@@ -97,6 +98,17 @@ function NavBar({ toggleThemeMode }) {
           <AddBoxIcon />
         </ListItemIcon>
         <ListItemText primary="Add Journal Entry" />
+      </ListItem>
+      <ListItem
+        button
+        component={RouterLink}
+        to="/create/tag"
+        onClick={toggleDrawer(false)}
+      >
+        <ListItemIcon>
+          <LabelIcon />
+        </ListItemIcon>
+        <ListItemText primary="Create Tags" />
       </ListItem>
       {/* Add more navigation items here */}
     </List>
