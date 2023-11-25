@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const router = express.Router();
 const JournalEntry = require("../models/journalEntry");
 const Tag = require("../models/Tags");
@@ -64,10 +65,13 @@ router.get("/", verifyToken, async (req, res) => {
 
     // Apply tag filter if it exists
     if (tags) {
-      const tagIds = tags
-        .split(",")
-        .map((tagId) => mongoose.Types.ObjectId(tagId));
-      query.tags = { $in: tagIds };
+      const tagNames = tags.split(",");
+      const tagDocs = await Tag.find({ tagName: { $in: tagNames } });
+      const tagIds = tagDocs.map((doc) => doc._id);
+
+      if (tagIds.length > 0) {
+        query.tags = { $in: tagIds };
+      }
     }
 
     // Find entries for the logged-in user within the optional date range

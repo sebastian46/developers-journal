@@ -21,7 +21,7 @@ const TagsFilter = ({
   const handleSelect = (event) => {
     // console.log(event.target.value);
     setSelectedTags(event.target.value);
-    onApplyFilter(event.target.value); // Pass the selected tags back to the parent component to apply filter
+    // onApplyFilter(event.target.value); // Pass the selected tags back to the parent component to apply filter
   };
 
   return (

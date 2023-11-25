@@ -106,7 +106,7 @@ function Dashboard() {
       ...prevFilters, // Spread any existing filters to keep them
       ...newFilters, // Spread new filters which may overwrite existing ones
       // Specifically ensure that the 'tags' filter is set, even if newFilters doesn't include it
-      tags: newFilters.tags || [],
+      tags: selectedTags || [],
     }));
   };
 
