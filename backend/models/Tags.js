@@ -10,6 +10,7 @@ const tagSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
+    unique: true,
   },
   details: {
     type: String,

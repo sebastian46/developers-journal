@@ -8,11 +8,17 @@ router.post("/", verifyToken, async (req, res) => {
   try {
     const { tagName, details } = req.body;
     const userId = req.user._id; // Assuming verifyToken middleware adds user to req
-    const date = new Date();
+
+    const existingTag = await Tags.findOne({ userId, tagName });
+    if (existingTag) {
+      return res
+        .status(400)
+        .json({ message: "Tag with this name already exists" });
+    }
 
     const newEntry = new Tags({
       userId,
-      date,
+      date: new Date(),
       tagName,
       details,
     });
